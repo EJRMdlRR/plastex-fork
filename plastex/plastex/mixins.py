@@ -85,6 +85,7 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
         send_me_a_copy=None,
         print_letterhead=None,
         is_inbound_mail_communcation=None,
+        print_language=None,
     ) -> dict:
 
         outgoing_email_account = self.get_outgoing_email_account()
