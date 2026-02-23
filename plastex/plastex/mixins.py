@@ -35,7 +35,11 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
             cc.update(self.get_assignees())
 
         cc = set(cc) - set(self.filter_thread_notification_disbled_users(cc))
-        cc = cc - set(self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation))
+        cc = cc - set(
+            self.mail_recipients(
+                is_inbound_mail_communcation=is_inbound_mail_communcation
+            )
+        )
 
         # # Incase of inbound mail, to and cc already received the mail, no need to send again.
         if is_inbound_mail_communcation:
@@ -43,21 +47,28 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
 
         self._final_cc = [m for m in cc if m not in frappe.STANDARD_USERS]
         return self._final_cc
+
     def get_content(self, print_format=None):
         if print_format:
             return self.content + self.get_attach_link(print_format)
         return self.content
+
     def get_attach_link(self, print_format):
         """Returns public link for the attachment via `templates/emails/print_link.html`."""
-        return '' if not isinstance(print_format, str) else frappe.get_template("templates/emails/print_link.html").render(
-            {
-                "url": get_url(),
-                "doctype": self.reference_doctype,
-                "name": self.reference_name,
-                "print_format": print_format,
-                "key": get_parent_doc(self).get_document_share_key(),
-            }
-		)
+        return (
+            ""
+            if not isinstance(print_format, str)
+            else frappe.get_template("templates/emails/print_link.html").render(
+                {
+                    "url": get_url(),
+                    "doctype": self.reference_doctype,
+                    "name": self.reference_name,
+                    "print_format": print_format,
+                    "key": get_parent_doc(self).get_document_share_key(),
+                }
+            )
+        )
+
     def get_assignees(self):
         """Get owners of the reference document."""
         filters = {
@@ -66,6 +77,7 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
             "reference_type": self.reference_doctype,
         }
         return ToDo.get_owners(filters)
+
     def sendmail_input_dict(
         self,
         print_html=None,
@@ -83,7 +95,8 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
             is_inbound_mail_communcation=is_inbound_mail_communcation
         )
         cc = self.get_mail_cc_with_displayname(
-            is_inbound_mail_communcation=is_inbound_mail_communcation, include_sender=send_me_a_copy
+            is_inbound_mail_communcation=is_inbound_mail_communcation,
+            include_sender=send_me_a_copy,
         )
         bcc = self.get_mail_bcc_with_displayname(
             is_inbound_mail_communcation=is_inbound_mail_communcation
@@ -98,17 +111,21 @@ class _CommunicationEmailMixin(CommunicationEmailMixin):
         except:
             frappe.log_error()
 
-        final_attachments=[]
-        
+        final_attachments = []
+
         if isinstance(print_format, list):
             for pf in print_format:
-                self.reference_doctype=pf.get('reference_doctype')
-                self.reference_name=pf.get('reference_name')
-                att = self.mail_attachments(print_format=pf.get('print_format'), print_html=print_html)
+                self.reference_doctype = pf.get("reference_doctype")
+                self.reference_name = pf.get("reference_name")
+                att = self.mail_attachments(
+                    print_format=pf.get("print_format"), print_html=print_html
+                )
                 if att:
                     final_attachments.append(att[0])
         else:
-            final_attachments = self.mail_attachments(print_format=print_format, print_html=print_html)
+            final_attachments = self.mail_attachments(
+                print_format=print_format, print_html=print_html
+            )
         incoming_email_account = self.get_incoming_email_account()
         return {
             "recipients": recipients,

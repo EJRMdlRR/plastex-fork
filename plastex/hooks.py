@@ -5,14 +5,18 @@ from . import __version__ as app_version
 app_name = "plastex"
 app_title = "Plastex"
 app_publisher = "Frappé"
-app_description = " App for managing Articles, Members, Memberships and Transactions for Libraries"
+app_description = (
+    " App for managing Articles, Members, Memberships and Transactions for Libraries"
+)
 app_icon = "octicon octicon-book"
 app_color = "grey"
 app_email = "info@frappe.io"
 app_license = "MIT"
 doctype_js = {
-	"Purchase Order":["fixtures/custom_scripts/Purchase Order.js",
-                   "plastex/purchase_order.js"]
+    "Purchase Order": [
+        "fixtures/custom_scripts/Purchase Order.js",
+        "plastex/purchase_order.js",
+    ]
 }
 # Includes in <head>
 # ------------------
@@ -42,7 +46,7 @@ doctype_js = {
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# 	"Role": "home_page"
 # }
 
 # Website user home page (by function)
@@ -82,29 +86,22 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-#doc_events = {
-#	"Email Queue": {
+# doc_events = {
+# 	"Email Queue": {
 # 		"on_change": "plastex.api.reload",
- #		"after_insert": "plastex.api.send_now",
+# 		"after_insert": "plastex.api.send_now",
 # 		"on_trash": "method"
-#	}
-#}
+# 	}
+# }
 
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
-#	"all": [
-#		"plastex.api.send"
-#	],
- 	"cron": {
-
-		"* * * * *": [
-	            "plastex.api.send"
-		     
-		    
-		]
-	}
+    # 	"all": [
+    # 		"plastex.api.send"
+    # 	],
+    "cron": {"* * * * *": ["plastex.api.send"]}
 }
 
 # Testing
@@ -119,6 +116,4 @@ scheduler_events = {
 # 	"frappe.desk.doctype.event.event.get_events": "plastex.event.get_events"
 # }
 
-override_doctype_class = {
-	"Communication": "plastex.plastex.mixins._Communication"
-}
+override_doctype_class = {"Communication": "plastex.plastex.mixins._Communication"}
