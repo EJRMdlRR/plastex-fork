@@ -15,6 +15,7 @@ from frappe.utils import (
 )
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import make_autoname
+from erpnext.accounts.utils import get_outstanding_invoices
 from erpnext.utilities.transaction_base import TransactionBase
 from erpnext.accounts.party import get_party_account_currency
 from frappe.desk.notifications import clear_doctype_notifications
@@ -270,3 +271,32 @@ def send():
             # f.write("name----------------"+str(email['name'])+'\n')
             # send_one(email['name'], now=True)
             ts_send_now(email["name"])
+
+
+@frappe.whitelist()
+def get_outstanding_invoices(
+    party_type,
+    party,
+    account,
+    common_filter=None,
+    posting_date=None,
+    min_outstanding=None,
+    max_outstanding=None,
+    accounting_dimensions=None,
+    vouchers=None,  # list of dicts [{'voucher_type': '', 'voucher_no': ''}] for filtering
+    limit=None,  # passed by reconciliation tool
+    voucher_no=None,  # filter passed by reconciliation tool
+):
+    return get_outstanding_invoices(
+        party_type=party_type,
+        party=party,
+        account=account,
+        common_filter=common_filter,
+        posting_date=posting_date,
+        min_outstanding=min_outstanding,
+        max_outstanding=max_outstanding,
+        accounting_dimensions=accounting_dimensions,
+        vouchers=vouchers,
+        limit=limit,
+        voucher_no=voucher_no,
+    )
