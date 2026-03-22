@@ -274,7 +274,7 @@ def send():
 
 
 @frappe.whitelist()
-def get_outstanding_invoices(
+def get_outstanding_invoices_plastex(
     party_type,
     party,
     account,
